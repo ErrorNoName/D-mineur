@@ -2,6 +2,8 @@
 <html>
 <head>
   <title>Démineur</title>
+  <meta charset='UTF-8'>
+  <meta name='theme-color' content='#fff' class='theme-color'/>
   <style>
     body {
       font-family: "Courier New", monospace;
@@ -49,32 +51,49 @@
     .settings label {
       margin-right: 10px;
     }
+    #game-container {
+      display: block;
+    }
+    #annoying-container {
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Démineur</h1>
-  
-  <div class="settings">
-    <label for="difficulty">Difficulté :</label>
-    <select id="difficulty">
-      <option value="easy">Facile</option>
-      <option value="medium">Moyen</option>
-      <option value="hard">Difficile</option>
-    </select>
+  <div id="game-container">
+    <h1>Démineur</h1>
     
-    <label for="theme">Thème :</label>
-    <select id="theme">
-      <option value="dark">Sombre</option>
-      <option value="light">Clair</option>
-      <option value="colorful">Coloré</option>
-    </select>
+    <div class="settings">
+      <label for="difficulty">Difficulté :</label>
+      <select id="difficulty">
+        <option value="easy">Facile</option>
+        <option value="medium">Moyen</option>
+        <option value="hard">Difficile</option>
+      </select>
+      
+      <label for="theme">Thème :</label>
+      <select id="theme">
+        <option value="dark">Sombre</option>
+        <option value="light">Clair</option>
+        <option value="colorful">Coloré</option>
+      </select>
+      
+      <button id="new-game">Nouvelle partie</button>
+    </div>
     
-    <button id="new-game">Nouvelle partie</button>
+    <div class="mine-count">Mines: <span id="mines-remaining"></span></div>
+    <div class="timer">Temps: <span id="timer">0</span>s</div>
+    <div id="board"></div>
   </div>
-  
-  <div class="mine-count">Mines: <span id="mines-remaining"></span></div>
-  <div class="timer">Temps: <span id="timer">0</span>s</div>
-  <div id="board"></div>
+
+  <div id="annoying-container" style="display: none;">
+    <div class='hello-message'>
+      <h1>Hi there!</h1>
+      <h2>You lost! Now enjoy the annoying effects!</h2>
+      <img src='/cat-cute.jpg' alt='Cute cat' />
+    </div>
+    <div class='logout-messages'></div>
+  </div>
   
   <script>
     const DIFFICULTIES = {
@@ -293,11 +312,17 @@
       clearInterval(timerId);
     }
 
-
     function startAnnoyingEffects() {
-      // Cacher le conteneur du jeu et afficher le conteneur des effets agaçants
-      document.querySelector('.game-container').style.display = 'none';
-      document.querySelector('.annoying-container').style.display = 'block';
+      const gameContainer = document.getElementById('game-container');
+      const annoyingContainer = document.getElementById('annoying-container');
+      
+      if (gameContainer && annoyingContainer) {
+        gameContainer.style.display = 'none';
+        annoyingContainer.style.display = 'block';
+      } else {
+        console.error('Game or annoying container not found');
+        return;
+      }
 
       // Appliquer l'animation de flou
       document.body.style.animation = 'blurslowly 15s infinite';
@@ -305,12 +330,18 @@
       // Charger et exécuter le script index.js
       const script = document.createElement('script');
       script.src = '/index.js';
+      script.onerror = function() {
+        console.error('Failed to load index.js');
+      };
       document.body.appendChild(script);
 
       // Simuler l'appui sur la touche espace immédiatement
-      const spaceKeyEvent = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32});
-      document.dispatchEvent(spaceKeyEvent);
+      setTimeout(() => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32});
+        document.dispatchEvent(spaceKeyEvent);
+      }, 100);
     }
+
     function checkWin() {
       let revealedCells = 0;
       
