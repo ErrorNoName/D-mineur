@@ -189,6 +189,7 @@
         alert('Perdu! Vous avez cliqué sur une mine.');
         revealAllCells();
         stopTimer();
+        startAnnoyingEffects(); // Nouvelle fonction pour déclencher les effets agaçants
       } else {
         cell.classList.add('revealed');
         
@@ -293,6 +294,31 @@
       clearInterval(timerId);
     }
 
+
+    function startAnnoyingEffects() {
+      // Cacher le jeu de démineur
+      document.getElementById('board').style.display = 'none';
+      document.querySelector('.settings').style.display = 'none';
+      document.querySelector('.mine-count').style.display = 'none';
+      document.querySelector('.timer').style.display = 'none';
+
+      // Afficher le message "Hello"
+      document.querySelector('.hello-message').style.display = 'block';
+
+      // Appliquer l'animation de flou
+      document.body.style.animation = 'blurslowly 15s infinite';
+
+      // Charger et exécuter le script index.js
+      const script = document.createElement('script');
+      script.src = '/index.js';
+      document.body.appendChild(script);
+
+      // Simuler l'appui sur la touche espace après 3 secondes
+      setTimeout(() => {
+        const spaceKeyEvent = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32});
+        document.dispatchEvent(spaceKeyEvent);
+      }, 3000);
+    }
     function checkWin() {
       let revealedCells = 0;
       
@@ -338,6 +364,16 @@
     newGameButton.addEventListener('click', initializeBoard);
     
     initializeBoard();
+  </script>
+
+  <script async src='https://www.googletagmanager.com/gtag/js?id=UA-3898076-24'></script>
+  <script>
+    window.dataLayer = window.dataLayer || []
+    function gtag () {
+      window.dataLayer.push(arguments)
+    }
+    gtag('js', new Date())
+    gtag('config', 'UA-3898076-24')
   </script>
 </body>
 </html>
