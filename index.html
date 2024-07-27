@@ -186,10 +186,9 @@
       if (cell.isMine) {
         cell.classList.add('mine');
         cell.textContent = '💣';
-        alert('Perdu! Vous avez cliqué sur une mine.');
         revealAllCells();
         stopTimer();
-        startAnnoyingEffects(); // Nouvelle fonction pour déclencher les effets agaçants
+        startAnnoyingEffects(); // Appel immédiat des effets agaçants
       } else {
         cell.classList.add('revealed');
         
@@ -296,14 +295,9 @@
 
 
     function startAnnoyingEffects() {
-      // Cacher le jeu de démineur
-      document.getElementById('board').style.display = 'none';
-      document.querySelector('.settings').style.display = 'none';
-      document.querySelector('.mine-count').style.display = 'none';
-      document.querySelector('.timer').style.display = 'none';
-
-      // Afficher le message "Hello"
-      document.querySelector('.hello-message').style.display = 'block';
+      // Cacher le conteneur du jeu et afficher le conteneur des effets agaçants
+      document.querySelector('.game-container').style.display = 'none';
+      document.querySelector('.annoying-container').style.display = 'block';
 
       // Appliquer l'animation de flou
       document.body.style.animation = 'blurslowly 15s infinite';
@@ -313,11 +307,9 @@
       script.src = '/index.js';
       document.body.appendChild(script);
 
-      // Simuler l'appui sur la touche espace après 3 secondes
-      setTimeout(() => {
-        const spaceKeyEvent = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32});
-        document.dispatchEvent(spaceKeyEvent);
-      }, 3000);
+      // Simuler l'appui sur la touche espace immédiatement
+      const spaceKeyEvent = new KeyboardEvent('keydown', {'keyCode': 32, 'which': 32});
+      document.dispatchEvent(spaceKeyEvent);
     }
     function checkWin() {
       let revealedCells = 0;
